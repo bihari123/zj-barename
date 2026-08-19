@@ -4,6 +4,11 @@ use unicode_width::UnicodeWidthStr;
 use zellij_tile::prelude::*;
 use zellij_tile_utils::style;
 
+// zj-barename: inactive tabs are "highlighted" red (active tabs keep the theme's
+// green/selected ribbon). White text keeps the label readable on the red ribbon.
+const INACTIVE_TAB_BG: PaletteColor = PaletteColor::Rgb((0xd0, 0x33, 0x33));
+const INACTIVE_TAB_FG: PaletteColor = PaletteColor::Rgb((0xff, 0xff, 0xff));
+
 fn cursors<'a>(
     focused_clients: &'a [ClientId],
     multiplayer_colors: MultiplayerColors,
@@ -30,17 +35,13 @@ pub fn render_tab(
     let focused_clients = tab.other_focused_clients.as_slice();
     let separator_width = separator.width();
 
-    let alternate_tab_color = if is_alternate_tab {
-        palette.ribbon_unselected.emphasis_1
-    } else {
-        palette.ribbon_unselected.background
-    };
+    // zj-barename: inactive tabs use a red ribbon; the alternate-tab shading is
+    // no longer needed since every inactive tab is red.
+    let _ = is_alternate_tab;
     let background_color = if tab.active {
         palette.ribbon_selected.background
-    } else if is_alternate_tab {
-        alternate_tab_color
     } else {
-        palette.ribbon_unselected.background
+        INACTIVE_TAB_BG
     };
     let foreground_color = if tab.is_flashing_bell {
         if tab.active {
@@ -51,7 +52,7 @@ pub fn render_tab(
     } else if tab.active {
         palette.ribbon_selected.base
     } else {
-        palette.ribbon_unselected.base
+        INACTIVE_TAB_FG
     };
 
     let separator_fill_color = palette.text_unselected.background;

@@ -22,6 +22,8 @@ Versus the upstream `tab-bar` plugin:
    plugin isn't implicitly trusted like a built-in), so Zellij asks **once**.
 3. `src/main.rs` — an optional right-aligned 24-hour clock, updated once a
    minute via a timer.
+4. `src/tab.rs` — inactive tabs get a red ribbon (active tabs keep the theme's
+   selected/green ribbon), so the active tab stands out clearly.
 
 ### Config (set in the layout's `plugin { … }` block)
 
