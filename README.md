@@ -28,7 +28,10 @@ Versus the upstream `tab-bar` plugin:
 | Key | Default | Meaning |
 | --- | --- | --- |
 | `clock` | `true` | Show the right-aligned `HH:MM` clock. Set `"false"` to hide it. |
-| `utc_offset` | `+00:00` | Offset from UTC for the clock, e.g. `"+05:30"` (IST), `"-08:00"`. The plugin reads the system (UTC) clock and applies this offset — there is no timezone database, so pick the fixed offset for your zone. |
+| `utc_offset` | `+05:30` | Offset from UTC for the clock, e.g. `"+05:30"` (IST, the default), `"-08:00"`. The plugin reads the system (UTC) clock and applies this offset — there is no timezone database, so pick the fixed offset for your zone. |
+
+All settings have sensible defaults baked in, so the plugin works with **no
+layout configuration** — the layout only needs the plugin's `location`.
 
 ## Build
 
@@ -53,9 +56,7 @@ layout (`~/.config/zellij/layouts/default.kdl`):
 ```kdl
 layout {
     pane size=1 borderless=true {
-        plugin location="file:~/.config/zellij/plugins/tab-bar.wasm" {
-            utc_offset "+05:30"   // your UTC offset for the clock; omit to disable via clock "false"
-        }
+        plugin location="file:~/.config/zellij/plugins/tab-bar.wasm"
     }
     pane
     pane size=1 borderless=true {

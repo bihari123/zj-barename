@@ -88,10 +88,13 @@ impl ZellijPlugin for State {
             .get("clock")
             .map(|s| s != "false")
             .unwrap_or(true);
+        // Default offset is IST (+05:30 = 19800s) so the clock is correct with no
+        // layout config. Override with the `utc_offset` config if you need another
+        // zone (there is no tz database in the sandbox, so it's a fixed offset).
         self.utc_offset_secs = configuration
             .get("utc_offset")
             .and_then(|s| parse_utc_offset(s))
-            .unwrap_or(0);
+            .unwrap_or(19800);
         request_permission(&[
             PermissionType::ReadApplicationState,
             PermissionType::ChangeApplicationState,
