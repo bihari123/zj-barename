@@ -1,28 +1,34 @@
 # zellij tab-bar (no "Zellij" prefix)
 
-A minimal fork of [Zellij](https://github.com/zellij-org/zellij)'s built-in
-`tab-bar` plugin. It is **pixel-identical to the default tab bar** with one
-change: the leading `Zellij` word is removed, so the bar shows just the session
-name.
+A fork of [Zellij](https://github.com/zellij-org/zellij)'s built-in `tab-bar`
+plugin with two tweaks: the leading `Zellij` word is removed (so the bar shows
+just the session name), and an optional right-aligned **HH:MM clock**.
 
 ```
 before:   Zellij (my-session)  Tab #1  Tab #2
-after:              (my-session)  Tab #1  Tab #2
+after:              (my-session)  Tab #1  Tab #2                    14:22
 ```
 
 Based on Zellij **v0.44.3**.
 
 ## What was changed
 
-Only two edits versus the upstream `tab-bar` plugin:
+Versus the upstream `tab-bar` plugin:
 
 1. `src/line.rs` — the prefix string `" Zellij "` is replaced with `" "`, so the
    session name (`(name)`) still renders, just without the leading word.
 2. `src/main.rs` — a one-time `request_permission(...)` for
-   `ReadApplicationState` + `ChangeApplicationState` is added in `load()`.
-   The built-in plugin doesn't need this because built-ins are implicitly
-   trusted; a plugin loaded from a file is not, so this makes Zellij ask for
-   permission **once** (then it's remembered) instead of on every tab change.
+   `ReadApplicationState` + `ChangeApplicationState` in `load()` (a file-loaded
+   plugin isn't implicitly trusted like a built-in), so Zellij asks **once**.
+3. `src/main.rs` — an optional right-aligned 24-hour clock, updated once a
+   minute via a timer.
+
+### Config (set in the layout's `plugin { … }` block)
+
+| Key | Default | Meaning |
+| --- | --- | --- |
+| `clock` | `true` | Show the right-aligned `HH:MM` clock. Set `"false"` to hide it. |
+| `utc_offset` | `+00:00` | Offset from UTC for the clock, e.g. `"+05:30"` (IST), `"-08:00"`. The plugin reads the system (UTC) clock and applies this offset — there is no timezone database, so pick the fixed offset for your zone. |
 
 ## Build
 
@@ -47,7 +53,9 @@ layout (`~/.config/zellij/layouts/default.kdl`):
 ```kdl
 layout {
     pane size=1 borderless=true {
-        plugin location="file:~/.config/zellij/plugins/tab-bar.wasm"
+        plugin location="file:~/.config/zellij/plugins/tab-bar.wasm" {
+            utc_offset "+05:30"   // your UTC offset for the clock; omit to disable via clock "false"
+        }
     }
     pane
     pane size=1 borderless=true {
