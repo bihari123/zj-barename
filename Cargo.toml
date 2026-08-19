@@ -1,0 +1,21 @@
+# Package name is intentionally "tab-bar" so the compiled artifact is
+# `tab-bar.wasm`, matching the default plugin name Zellij expects.
+[package]
+name = "tab-bar"
+version = "0.1.0"
+authors = ["bihari123"]
+edition = "2021"
+license = "MIT"
+description = "A minimal fork of Zellij's built-in tab-bar plugin that drops the leading \"Zellij\" prefix, keeping just the session name."
+repository = "https://github.com/bihari123/zj-barename"
+
+[dependencies]
+colored = "2"
+ansi_term = "0.12"
+unicode-width = "0.1.8"
+zellij-tile = "0.44.3"
+zellij-tile-utils = "0.44.3"
+
+[profile.release]
+opt-level = "s"
+lto = true
